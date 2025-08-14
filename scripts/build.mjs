@@ -18,22 +18,21 @@ const MANIFESTS = {
   firefox: path.join(root, 'manifests', 'manifest.firefox.json'),
 };
 
-// allowlist: root files to copy
 const ALLOW_ROOT = new Set([
   'background.js',
   'content.js',
   'options.html',
-  'config.js', // keep if you use root config.js
+  'options.js',
+  'config.js',
 ]);
 
-// allowlist: directories to copy (recursively)
 const ALLOW_DIRS = new Set([
   'storage',
   'utils',
   'dom',
   'filters',
   'ui',
-  'config',   // keep if you use config/config.js
+  'config',
   'icons',
   'images',
   'assets',
@@ -47,7 +46,8 @@ async function rmrf(p) { await fs.rm(p, { recursive: true, force: true }); }
 async function mkdirp(p) { await fs.mkdir(p, { recursive: true }); }
 
 async function copySelected(src, dst, rel = '') {
-  const items = await fs.readdir(rel ? path.join(src, rel) : src, { withFileTypes: true });
+  const dir = rel ? path.join(src, rel) : src;
+  const items = await fs.readdir(dir, { withFileTypes: true });
   for (const it of items) {
     const name = it.name;
     if (!rel && SKIP_NAMES.has(name)) continue;
@@ -76,9 +76,9 @@ async function normalizeManifest(manifestPath) {
 
   // strip "type":"module" from all content scripts
   if (Array.isArray(json.content_scripts)) {
-    json.content_scripts = json.content_scripts.map(cs => {
+    json.content_scripts = json.content_scripts.map((cs) => {
       const rest = { ...cs };
-      delete rest.type;
+      if ('type' in rest) delete rest.type;
       return rest;
     });
   }
@@ -100,6 +100,10 @@ async function normalizeManifest(manifestPath) {
   return json;
 }
 
+async function fileExists(p) {
+  try { await fs.access(p); return true; } catch { return false; }
+}
+
 async function main() {
   await rmrf(DIST);
   await mkdirp(DIST);
@@ -107,11 +111,18 @@ async function main() {
 
   // swap manifest
   const srcManifest = MANIFESTS[TARGET];
-  try { await fs.access(srcManifest); } catch { assert(false, `Missing ${srcManifest}`); }
+  assert(await fileExists(srcManifest), `Missing ${srcManifest}`);
   const dstManifest = path.join(DIST, 'manifest.json');
   await fs.copyFile(srcManifest, dstManifest);
 
   const normalized = await normalizeManifest(dstManifest);
+
+  // Guard rails: ensure options assets made it
+  for (const req of ['options.html', 'options.js']) {
+    const p = path.join(DIST, req);
+    assert(await fileExists(p), `Build is missing ${req} in dist/${TARGET}. Add it to ALLOW_ROOT if needed.`);
+  }
+
   console.log(`Built ${TARGET} → ${DIST}`);
   console.log('Background field:', normalized.background);
 }
