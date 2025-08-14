@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>LinkedIn Job Filter – Options</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body { font: 14px/1.45 -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif; padding: 24px; }
+      h1 { font-size: 18px; margin: 0 0 16px; }
+      fieldset { border: 1px solid #ddd; padding: 16px; border-radius: 8px; margin-bottom: 18px; }
+      legend { padding: 0 8px; }
+      label { display: block; margin: 6px 0; }
+      .row { display: flex; gap: 18px; align-items: center; }
+      button { padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc; background: #fafafa; cursor: pointer; }
+      .muted { color: #666; }
+      input[type="number"] { width: 140px; }
+      textarea { width: 100%; min-height: 90px; font-family: monospace; }
+      .wrap { max-width: 880px; }
+      .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+      .chips label { display: inline-flex; gap: 6px; align-items: center; border: 1px solid #ddd; border-radius: 999px; padding: 4px 10px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>LinkedIn Job Filter – Options</h1>
+
+      <fieldset>
+        <legend>Tag Filters</legend>
+        <label><input type="checkbox" id="excludePromoted" /> Exclude “Promoted”</label>
+        <label><input type="checkbox" id="excludeApplied" /> Exclude “Applied”</label>
+        <label><input type="checkbox" id="excludeReposted" /> Exclude “Reposted”</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Seniority (keep only)</legend>
+        <div class="chips">
+          <label><input type="checkbox" class="seniority" value="senior" /> Senior</label>
+          <label><input type="checkbox" class="seniority" value="staff" /> Staff</label>
+          <label><input type="checkbox" class="seniority" value="principal" /> Principal</label>
+          <label><input type="checkbox" class="seniority" value="manager" /> Manager</label>
+          <label><input type="checkbox" class="seniority" value="director" /> Director</label>
+          <label><input type="checkbox" class="seniority" value="lead" /> Lead</label>
+        </div>
+        <label><input type="checkbox" id="seniorityEnabled" /> Enable seniority filter</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Salary</legend>
+        <label><input type="checkbox" id="requireSalary" /> Require salary listed</label>
+        <label>Minimum salary (optional): <input type="number" id="minSalary" placeholder="e.g., 180000" /></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Companies</legend>
+        <label>Whitelist (one per line):<br/>
+          <textarea id="whitelist"></textarea>
+        </label>
+        <label>Blacklist (one per line):<br/>
+          <textarea id="blacklist"></textarea>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Excluded keywords (one per line)</legend>
+        <textarea id="excludeKeywords" placeholder="e.g., php
+wordpress"></textarea>
+      </fieldset>
+
+      <div class="row">
+        <button id="save">Save</button>
+        <span id="status" class="muted"></span>
+      </div>
+    </div>
+
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

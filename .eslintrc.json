@@ -1,0 +1,29 @@
+{
+  "root": true,
+  "env": { "browser": true, "es2023": true },
+  "globals": { "chrome": "readonly", "browser": "readonly" },
+  "parserOptions": { "ecmaVersion": "latest", "sourceType": "script" },
+  "extends": ["eslint:recommended", "plugin:import/recommended"],
+  "plugins": ["import"],
+  "settings": {
+    "import/resolver": { "node": { "extensions": [".js"] } }
+  },
+  "rules": {
+    "eqeqeq": ["error", "smart"],
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }],
+    "no-constant-binary-expression": "error",
+    "no-console": "off",
+    "import/no-unresolved": ["error", { "ignore": ["^chrome-extension://", "^resource://"] }]
+  },
+  "overrides": [
+    {
+      "files": ["background.js"],
+      "env": { "worker": true, "browser": true }
+    },
+    {
+      "files": ["scripts/**/*.mjs", "*.mjs"],
+      "env": { "node": true },
+      "parserOptions": { "sourceType": "module" }
+    }
+  ]
+}

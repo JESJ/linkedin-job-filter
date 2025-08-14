@@ -1,0 +1,25 @@
+{
+  "name": "linkedin-job-filter",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --ext js",
+    "lint:fix": "eslint . --ext js --fix",
+    "build:chrome": "node scripts/build.mjs chrome",
+    "build:firefox": "node scripts/build.mjs firefox",
+    "zip:chrome": "npm run build:chrome && cd dist/chrome && zip -r ../chrome.zip .",
+    "zip:firefox": "npm run build:firefox && cd dist/firefox && zip -r ../firefox.zip ."
+  },
+  "description": "Filters/mutes low‑value LinkedIn job cards (reposts, staffing spam, wrong seniority, additional salary filter and excluded keywords) and adds a small toolbar to toggle visibility and open options.",
+  "main": "background.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "eslint": "^9.33.0",
+    "eslint-plugin-import": "^2.32.0",
+    "globals": "^16.3.0",
+    "web-ext": "^8.2.0"
+  }
+}
